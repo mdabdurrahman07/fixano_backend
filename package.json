@@ -1,0 +1,34 @@
+{
+  "name": "fixano_backend",
+  "version": "1.0.0",
+  "description": "Fixano is a backend API for a home services marketplace. Customers can browse available services (plumbing, electrical, cleaning, painting, etc.), book qualified technicians, and leave reviews. Technicians can create service profiles, manage their availability, and handle job bookings. Admins oversee the platform, manage users, and moderate service categories.",
+  "keywords": [
+    "fixano",
+    "express",
+    "node",
+    "prisma",
+    "postgresql",
+    "jwt"
+  ],
+  "license": "ISC",
+  "author": "MD Abdur Rahman Nur Jamil",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "@types/node": "^26.1.0",
+    "@types/pg": "^8.20.0",
+    "prettier": "3.9.4",
+    "prisma": "^7.8.0",
+    "tsx": "^4.23.0",
+    "typescript": "^6.0.3"
+  },
+  "dependencies": {
+    "@prisma/adapter-pg": "^7.8.0",
+    "@prisma/client": "^7.8.0",
+    "dotenv": "^17.4.2",
+    "pg": "^8.22.0"
+  }
+}
