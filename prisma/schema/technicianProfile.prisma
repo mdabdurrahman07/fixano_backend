@@ -1,8 +1,8 @@
 model Technician {
   id              String   @id @default(uuid())
   bio             String?
-  yearsExperience Int?
-  hourlyRate      Decimal  @db.Decimal(10, 2)
+  yearsExperience Int?     @default(0)
+  hourlyRate      Decimal?  @db.Decimal(10, 2) @default(10)
   avgRating       Float    @default(0)
   totalReviews    Int      @default(0)
   isVerified      Boolean  @default(false)
@@ -10,7 +10,7 @@ model Technician {
   updatedAt       DateTime @updatedAt
   // relations
   userId          String   @unique
-  user            User     @relation(fields: [userId], references: [id])
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("technicians")
 }
