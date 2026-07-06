@@ -1,5 +1,5 @@
 -- CreateEnum
-CREATE TYPE "Role" AS ENUM ('USER', 'TECHNICIAN', 'ADMIN');
+CREATE TYPE "Role" AS ENUM ('CUSTOMER', 'TECHNICIAN', 'ADMIN');
 
 -- CreateEnum
 CREATE TYPE "UserActiveStatus" AS ENUM ('ACTIVE', 'BANNED');
@@ -8,8 +8,8 @@ CREATE TYPE "UserActiveStatus" AS ENUM ('ACTIVE', 'BANNED');
 CREATE TABLE "technicians" (
     "id" TEXT NOT NULL,
     "bio" TEXT,
-    "yearsExperience" INTEGER,
-    "hourlyRate" DECIMAL(10,2) NOT NULL,
+    "yearsExperience" INTEGER DEFAULT 0,
+    "hourlyRate" DECIMAL(10,2) DEFAULT 10,
     "avgRating" DOUBLE PRECISION NOT NULL DEFAULT 0,
     "totalReviews" INTEGER NOT NULL DEFAULT 0,
     "isVerified" BOOLEAN NOT NULL DEFAULT false,
@@ -26,7 +26,7 @@ CREATE TABLE "users" (
     "name" VARCHAR(255) NOT NULL,
     "email" TEXT NOT NULL,
     "password" TEXT NOT NULL,
-    "role" "Role" NOT NULL DEFAULT 'USER',
+    "role" "Role" NOT NULL DEFAULT 'CUSTOMER',
     "status" "UserActiveStatus" NOT NULL DEFAULT 'ACTIVE',
     "phone" VARCHAR(20),
     "avatarUrl" TEXT,
@@ -43,4 +43,4 @@ CREATE UNIQUE INDEX "technicians_userId_key" ON "technicians"("userId");
 CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
 
 -- AddForeignKey
-ALTER TABLE "technicians" ADD CONSTRAINT "technicians_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "technicians" ADD CONSTRAINT "technicians_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
