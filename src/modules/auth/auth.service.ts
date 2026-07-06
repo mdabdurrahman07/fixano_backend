@@ -3,6 +3,8 @@ import { prisma } from '../../lib/prisma';
 import { IUserLogin, IUserPayload } from './auth.interface';
 import config from '../../config/config.dotenv';
 import { Prisma } from '../../../generated/prisma/client';
+import { jwtUtils } from '../../util/jwtUtils';
+import { SignOptions } from 'jsonwebtoken';
 
 const createUserIntoDB = async (payload: IUserPayload) => {
   const { name, email, password, phone, avatarUrl, role, bio, yearsExperience, hourlyRate } = payload;
@@ -75,7 +77,28 @@ const logUser = async (payload: IUserLogin) => {
     throw new Error('Your account has been banned. Please contact support');
   }
 
-  return true;
+  // jwt payload
+  const jwtPayload = {
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    role: user.role
+  };
+  // accessToken
+  const accessToken = jwtUtils.createToken(
+    jwtPayload,
+    config.jwt_access_secret,
+    config.jwt_access_expires_in as SignOptions
+  );
+  const refreshToken = jwtUtils.createToken(
+    jwtPayload,
+    config.jwt_refresh_secret,
+    config.jwt_refresh_expires_in as SignOptions
+  );
+  return {
+    accessToken,
+    refreshToken
+  };
 };
 
 export const authService = {
