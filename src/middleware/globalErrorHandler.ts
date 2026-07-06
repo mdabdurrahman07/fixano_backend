@@ -7,4 +7,5 @@ export const globalErrorHandler = (err: unknown, req: Request, res: Response, ne
     message: (err as Error).message,
     error: (err as Error).stack
   });
+  next()
 };

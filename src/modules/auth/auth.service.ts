@@ -101,7 +101,23 @@ const logUser = async (payload: IUserLogin) => {
   };
 };
 
+const currentUser = async (userId: string) => {
+  const user = await prisma.user.findUniqueOrThrow({
+    where: {
+      id: userId
+    },
+    omit: {
+      password: true
+    },
+    include: {
+      technician: true
+    }
+  });
+  return user;
+};
+
 export const authService = {
   createUserIntoDB,
-  logUser
+  logUser,
+  currentUser
 };

@@ -3,6 +3,8 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import config from './config/config.dotenv';
 import { authRouter } from './modules/auth/auth.route';
+import { notFound } from './middleware/notFound.middleware';
+import { globalErrorHandler } from './middleware/globalErrorHandler';
 
 const app: Application = express();
 
@@ -31,5 +33,10 @@ app.get('/', (req: Request, res: Response) => {
 
 // ! USERS
 app.use('/api/v1/fixano/auth/users', authRouter);
+
+// ! wrong route
+app.use(notFound);
+// ! global error
+app.use(globalErrorHandler);
 
 export default app;

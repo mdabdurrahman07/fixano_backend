@@ -10,23 +10,52 @@ const registerUser = catchAsync(async (req: Request, res: Response, next: NextFu
   sendResponse(res, {
     success: true,
     statusCode: HttpStatus.CREATED,
-    message: `${result?.role === 'TECHNICIAN' ? 'Technician' : 'Customer'} created successfully`,
+    message: `${result?.role === 'TECHNICIAN' ? 'Technician' : 'Customer'} registration successful`,
     data: result
   });
 });
 
 const loginUser = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   const payload = req.body;
-  const result = await authService.logUser(payload);
+  const {accessToken, refreshToken} = await authService.logUser(payload);
+  // ? accessToken and refreshToken setup
+
+  // accessToken
+  res.cookie("accessToken", accessToken, {
+    httpOnly: true,
+    secure: false,
+    sameSite: "none",
+    maxAge: 1000 * 60 * 60 * 24 // 1D
+  })
+  // refreshToken
+  res.cookie("refreshToken", refreshToken, {
+    httpOnly: true,
+    secure: false,
+    sameSite: "none",
+    maxAge: 1000 * 60 * 60 * 24 * 7 // 7D
+  })
+
   sendResponse(res, {
     success: true,
     statusCode: HttpStatus.OK,
-    message: 'Login Successful',
+    message: 'Login successful',
+    data: {accessToken, refreshToken}
+  });
+});
+
+const getCurrentUser = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+  const userId = req.user?.id as string;
+  const result = await authService.currentUser(userId);
+  sendResponse(res, {
+    success: true,
+    statusCode: HttpStatus.OK,
+    message: 'User info retrieved successfully',
     data: result
   });
 });
 
 export const authController = {
   registerUser,
-  loginUser
+  loginUser,
+  getCurrentUser
 };
