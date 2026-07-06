@@ -3,6 +3,8 @@ import { Role } from '../../generated/prisma/enums';
 import { catchAsync } from '../util/catchAsync';
 import { jwtUtils } from '../util/jwtUtils';
 import config from '../config/config.dotenv';
+import { JwtPayload } from 'jsonwebtoken';
+import { prisma } from '../lib/prisma';
 
 export const auth = (...requiredRoles: Role[]) => {
   return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
@@ -21,6 +23,37 @@ export const auth = (...requiredRoles: Role[]) => {
     if (!verifiedToken?.success) {
       throw new Error(verifiedToken?.error);
     }
-    next()
+
+    const { id, email, name, role } = verifiedToken as JwtPayload;
+
+    if (requiredRoles.length && !requiredRoles.includes(role)) {
+      throw new Error("Forbidden. You don't have permission to access this resource");
+    }
+
+    const user = await prisma.user.findUnique({
+      where: {
+        id,
+        email,
+        name,
+        role
+      }
+    });
+
+    if (!user) {
+      throw new Error('User not found. Please log in again');
+    }
+
+    if (user.status === 'BANNED') {
+      throw new Error('Your account has been banned. Please contact support');
+    }
+
+    req.user = {
+      id,
+      email,
+      name,
+      role
+    };
+
+    next();
   });
 };
