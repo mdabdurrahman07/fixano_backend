@@ -117,5 +117,12 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
+# Prisma
+
+/generated
+generated
+../../generated/prisma
+
 # End of https://mrkandreev.name/snippets/gitignore-generator/#Node
-/generated/prisma
+
+
