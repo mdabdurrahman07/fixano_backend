@@ -1,16 +1,20 @@
 model Technician {
-  id              String   @id @default(uuid())
+  id              String         @id @default(uuid())
   bio             String?
-  yearsExperience Int?     @default(0)
-  hourlyRate      Decimal? @default(10) @db.Decimal(10, 2)
-  avgRating       Float    @default(0)
-  totalReviews    Int      @default(0)
-  isVerified      Boolean  @default(false)
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  yearsExperience Int?           @default(0)
+  hourlyRate      Decimal?       @default(10) @db.Decimal(10, 2)
+  avgRating       Float          @default(0)
+  totalReviews    Int            @default(0)
+  isVerified      Boolean        @default(false)
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
   // relations
-  userId          String   @unique
-  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId          String         @unique
+  user            User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  availabilities  Availability[]
+  bookings        Booking[]
+  services        Service[]
+  reviews         Review[]
 
   @@map("technicians")
 }

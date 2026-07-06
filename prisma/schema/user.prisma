@@ -10,6 +10,8 @@ model User {
   createdAt  DateTime         @default(now())
   updatedAt  DateTime         @updatedAt
   technician Technician?
+  bookings   Booking[]
+  reviews    Review[]
 
   @@map("users")
 }

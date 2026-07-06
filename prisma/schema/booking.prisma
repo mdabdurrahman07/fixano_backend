@@ -1,0 +1,23 @@
+model Booking {
+    id           String        @id @default(uuid())
+    status       BookingStatus @default(REQUESTED)
+    scheduledAt  DateTime
+    address      String
+    notes        String?
+    totalAmount  Decimal       @db.Decimal(10, 2)
+    createdAt    DateTime      @default(now())
+    updatedAt    DateTime      @updatedAt
+    // relation
+    customerId   String
+    customer     User          @relation(fields: [customerId], references: [id], onDelete: Cascade)
+    technicianId String
+    technician   Technician    @relation(fields: [technicianId], references: [id], onDelete: Cascade)
+    serviceId    String
+    service      Service       @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+    reviews      Review[]
+
+    @@index([status])
+    @@index([customerId])
+    @@index([technicianId])
+    @@map("bookings")
+}
