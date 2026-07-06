@@ -1,6 +1,6 @@
 import bcrypt from 'bcryptjs';
 import { prisma } from '../../lib/prisma';
-import { IUserPayload } from './auth.interface';
+import { IUserLogin, IUserPayload } from './auth.interface';
 import config from '../../config/config.dotenv';
 import { Prisma } from '../../../generated/prisma/client';
 
@@ -56,6 +56,29 @@ const createUserIntoDB = async (payload: IUserPayload) => {
   return user;
 };
 
+const logUser = async (payload: IUserLogin) => {
+  const { email, password } = payload;
+
+  const user = await prisma.user.findUniqueOrThrow({
+    where: {
+      email
+    }
+  });
+
+  const isPasswordMatched = await bcrypt.compare(password, user.password);
+
+  if (!isPasswordMatched) {
+    throw new Error('password is incorrect');
+  }
+
+  if (user.status === 'BANNED') {
+    throw new Error('Your account has been banned. Please contact support');
+  }
+
+  return true;
+};
+
 export const authService = {
-  createUserIntoDB
+  createUserIntoDB,
+  logUser
 };

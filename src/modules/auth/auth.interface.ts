@@ -4,10 +4,15 @@ export interface IUserPayload {
   name: string;
   email: string;
   password: string;
-  role: Exclude<Role, 'ADMIN'>
+  role: Exclude<Role, 'ADMIN'>;
   phone?: string;
   avatarUrl?: string;
   bio?: string;
   yearsExperience?: number;
-  hourlyRate?: number
+  hourlyRate?: number;
+}
+
+export interface IUserLogin {
+  email: string;
+  password: string;
 }
