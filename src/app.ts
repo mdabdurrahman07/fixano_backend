@@ -6,6 +6,7 @@ import { authRouter } from './modules/auth/auth.route';
 import { notFound } from './middleware/notFound.middleware';
 import { globalErrorHandler } from './middleware/globalErrorHandler';
 import { adminRoute } from './modules/admin/admin.route';
+import { serviceRoute } from './modules/service/service.route';
 
 const app: Application = express();
 
@@ -37,6 +38,9 @@ app.use('/api/v1/fixano/auth/users', authRouter);
 
 // ! ADMIN
 app.use('/api/v1/fixano/admin', adminRoute)
+
+// ? SERVICE (PUBLIC)
+app.use('/api/v1/fixano', serviceRoute)
 
 // ! wrong route
 app.use(notFound);
