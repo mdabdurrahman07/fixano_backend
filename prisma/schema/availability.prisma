@@ -10,5 +10,6 @@ model Availability {
   technicianId String
   technician   Technician @relation(fields: [technicianId], references: [id], onDelete: Cascade)
 
+  @@index([technicianId, dayOfWeek])
   @@map("availabilities")
 }
