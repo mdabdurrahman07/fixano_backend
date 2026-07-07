@@ -5,6 +5,7 @@ import config from './config/config.dotenv';
 import { authRouter } from './modules/auth/auth.route';
 import { notFound } from './middleware/notFound.middleware';
 import { globalErrorHandler } from './middleware/globalErrorHandler';
+import { adminRoute } from './modules/admin/admin.route';
 
 const app: Application = express();
 
@@ -33,6 +34,9 @@ app.get('/', (req: Request, res: Response) => {
 
 // ! USERS
 app.use('/api/v1/fixano/auth/users', authRouter);
+
+// ! ADMIN
+app.use('/api/v1/fixano/admin', adminRoute)
 
 // ! wrong route
 app.use(notFound);
