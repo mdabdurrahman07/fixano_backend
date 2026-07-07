@@ -5,7 +5,8 @@ import { serviceService } from "./service.service";
 import { sendResponse } from "../../util/sendResponse";
 
 const getAllServices = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    const result = await serviceService.fetchAllServices()
+    const query = req.query
+    const result = await serviceService.fetchAllServices(query)
     sendResponse(res, {
         success: true,
         statusCode: httpStatus.OK,

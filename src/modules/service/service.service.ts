@@ -1,7 +1,67 @@
+import { ServiceWhereInput } from '../../../generated/prisma/models';
 import { prisma } from '../../lib/prisma';
+import { IServiceQuery } from './service.interface';
 
-const fetchAllServices = async () => {
-  const services = await prisma.service.findMany();
+const fetchAllServices = async (query: IServiceQuery) => {
+  const sortby = query.sortby ? query.sortby : 'createdAt';
+  const sortOrder = query.sortOrder ? query.sortOrder : 'desc';
+  const andConditions: ServiceWhereInput[] = [];
+  if (query.searchTerm) {
+    andConditions.push({
+      OR: [
+        {
+          title: {
+            contains: query.searchTerm,
+            mode: 'insensitive'
+          }
+        },
+        {
+          description: {
+            contains: query.searchTerm,
+            mode: 'insensitive'
+          }
+        }
+      ]
+    });
+  }
+  if (query.title) {
+    andConditions.push({
+      title: query.title
+    });
+  }
+  if (query.description) {
+    andConditions.push({
+      description: query.description
+    });
+  }
+  if (query.price) {
+    andConditions.push({
+      price: Number(query.price)
+    });
+  }
+  if (query.technicianId) {
+    andConditions.push({
+      technicianId: query.technicianId
+    });
+  }
+  if (query.isActive) {
+    andConditions.push({
+      isActive: query.isActive
+    });
+  }
+  const services = await prisma.service.findMany({
+    where:{
+      AND: andConditions
+    },
+    orderBy:{
+      [sortby]: sortOrder
+    },
+    include:{
+      bookings: true,
+      category: true,
+      technician: true
+    }
+  });
   return services;
 };
 const fetchAllTechnicians = async () => {
@@ -13,7 +73,7 @@ const fetchSingleTechnician = async (technicianId: string) => {
     where: {
       id: technicianId
     },
-    include:{
+    include: {
       reviews: true
     }
   });
@@ -24,11 +84,11 @@ const fetchSingleTechnician = async (technicianId: string) => {
 };
 const fetchAllCategories = async () => {
   const categories = await prisma.category.findMany({
-    include:{
+    include: {
       services: true
     }
-  })
-  return categories
+  });
+  return categories;
 };
 
 export const serviceService = {
