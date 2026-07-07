@@ -1,6 +1,6 @@
-import { ServiceWhereInput } from '../../../generated/prisma/models';
+import { ServiceWhereInput, TechnicianWhereInput } from '../../../generated/prisma/models';
 import { prisma } from '../../lib/prisma';
-import { IServiceQuery } from './service.interface';
+import { IServiceQuery, ITechnicianQuery } from './service.interface';
 
 const fetchAllServices = async (query: IServiceQuery) => {
   const sortby = query.sortby ? query.sortby : 'createdAt';
@@ -49,23 +49,60 @@ const fetchAllServices = async (query: IServiceQuery) => {
       isActive: query.isActive
     });
   }
-  const services = await prisma.service.findMany({
-    where:{
+  const services = await prisma.service.findFirst({
+    where: {
       AND: andConditions
     },
-    orderBy:{
+    orderBy: {
       [sortby]: sortOrder
     },
-    include:{
-      bookings: true,
+    include: {
       category: true,
       technician: true
     }
   });
   return services;
 };
-const fetchAllTechnicians = async () => {
-  const technicians = await prisma.technician.findMany();
+const fetchAllTechnicians = async (query: ITechnicianQuery) => {
+  const sortby = query.sortby ? query.sortby : 'createdAt';
+  const sortOrder = query.sortOrder ? query.sortOrder : 'desc';
+  const andConditions: TechnicianWhereInput[] = [];
+  if (query.searchTerm) {
+    andConditions.push({
+      bio: {
+        contains: query.searchTerm,
+        mode: 'insensitive'
+      }
+    });
+  }
+  if (query.hourlyRate) {
+    andConditions.push({
+      hourlyRate: query.hourlyRate
+    });
+  }
+  if (query.avgRating) {
+    andConditions.push({
+      avgRating: Number(query.avgRating)
+    });
+  }
+  if (query.yearsExperience) {
+    andConditions.push({
+      yearsExperience: Number(query.yearsExperience)
+    });
+  }
+  const technicians = await prisma.technician.findFirst({
+    where: {
+      AND: andConditions
+    },
+    orderBy: {
+      [sortby]: sortOrder
+    },
+    include: {
+      reviews: true,
+      availabilities: true,
+      services: true
+    }
+  });
   return technicians;
 };
 const fetchSingleTechnician = async (technicianId: string) => {
@@ -74,7 +111,9 @@ const fetchSingleTechnician = async (technicianId: string) => {
       id: technicianId
     },
     include: {
-      reviews: true
+      reviews: true,
+      availabilities: true,
+      services: true
     }
   });
   if (!technician) {
