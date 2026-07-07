@@ -1,11 +1,14 @@
 import { Router } from 'express';
+import { auth } from '../../middleware/auth.middleware';
+import { Role } from '../../../generated/prisma/enums';
+import { technicianController } from './technician.controller';
 
 const router = Router();
 
-router.post('/service')
-router.put('/profile')
-router.put('/availability')
-router.get('/bookings')
-router.patch('booking/:id')
+router.post('/service', auth(Role.TECHNICIAN, Role.ADMIN), technicianController.addService);
+router.put('/profile', auth(Role.TECHNICIAN, Role.ADMIN), technicianController.editTechnicianProfile);
+router.put('/availability', auth(Role.TECHNICIAN, Role.ADMIN), technicianController.editTechnicianAvailability);
+router.get('/bookings', auth(Role.TECHNICIAN, Role.ADMIN), technicianController.fetchTechnicianBookings);
+router.patch('booking/:id', auth(Role.TECHNICIAN, Role.ADMIN), technicianController.editTechnicianBooking);
 
 export const technicianRoute = router;

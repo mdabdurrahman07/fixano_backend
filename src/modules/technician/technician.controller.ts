@@ -1,7 +1,20 @@
+import httpStatus from 'http-status';
 import { NextFunction, Request, Response } from 'express';
 import { catchAsync } from '../../util/catchAsync';
+import { technicianService } from './technician.service';
+import { sendResponse } from '../../util/sendResponse';
 
-const addService = catchAsync(async (req: Request, res: Response, next: NextFunction) => {});
+const addService = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+  const payload = req.body;
+  const userId = req.user?.id as string
+  const result = await technicianService.createService(payload, userId);
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.CREATED,
+    message: 'Service created successfully',
+    data: result
+  });
+});
 const editTechnicianProfile = catchAsync(async (req: Request, res: Response, next: NextFunction) => {});
 const editTechnicianAvailability = catchAsync(async (req: Request, res: Response, next: NextFunction) => {});
 const fetchTechnicianBookings = catchAsync(async (req: Request, res: Response, next: NextFunction) => {});
