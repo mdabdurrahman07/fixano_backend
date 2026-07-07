@@ -1,5 +1,6 @@
 import { UserActiveStatus } from '../../../generated/prisma/enums';
 import { prisma } from '../../lib/prisma';
+import { ICategoryPayload } from './admin.interface';
 
 const fetchAllUsers = async () => {
   const allUser = await prisma.user.findMany({
@@ -12,7 +13,7 @@ const fetchAllUsers = async () => {
   });
   return allUser;
 };
-const updateUserStatus = async ({status}: {status: UserActiveStatus}, userId: string) => {
+const updateUserStatus = async ({ status }: { status: UserActiveStatus }, userId: string) => {
   const user = await prisma.user.findUnique({
     where: {
       id: userId
@@ -40,9 +41,41 @@ const updateUserStatus = async ({status}: {status: UserActiveStatus}, userId: st
   });
   return updateStatus;
 };
-const fetchAllBookings = async () => {};
-const fetchAllCategories = async () => {};
-const createNewCategory = async () => {};
+const fetchAllBookings = async () => {
+  const bookings = await prisma.booking.findMany();
+  return bookings;
+};
+const fetchAllCategories = async () => {
+  const categories = await prisma.category.findMany();
+  return categories;
+};
+const createNewCategory = async (payload: ICategoryPayload) => {
+  const { name, description, iconUrl } = payload;
+  const isCategoryExist = await prisma.category.findUnique({
+    where: {
+      name: name
+    }
+  });
+  if (isCategoryExist) {
+    throw new Error('This Category already exists');
+  }
+  const createCategory = await prisma.category.create({
+    data: {
+      name: name,
+      description: description,
+      iconUrl: iconUrl
+    }
+  });
+  const category = await prisma.category.findUnique({
+    where: {
+      id: createCategory.id
+    },
+    include:{
+        services: true
+    }
+  });
+  return category;
+};
 
 export const adminService = {
   fetchAllUsers,
