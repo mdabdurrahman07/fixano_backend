@@ -27,9 +27,9 @@ const editTechnicianProfile = catchAsync(async (req: Request, res: Response, nex
   });
 });
 const editTechnicianAvailability = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-  const userId = req.user?.id as string
-  const payload = req.body
-  const result  = await technicianService.putTechnicianAvailability(payload, userId)
+  const userId = req.user?.id as string;
+  const payload = req.body;
+  const result = await technicianService.putTechnicianAvailability(payload, userId);
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,
@@ -37,8 +37,28 @@ const editTechnicianAvailability = catchAsync(async (req: Request, res: Response
     data: result
   });
 });
-const fetchTechnicianBookings = catchAsync(async (req: Request, res: Response, next: NextFunction) => {});
-const editTechnicianBooking = catchAsync(async (req: Request, res: Response, next: NextFunction) => {});
+const fetchTechnicianBookings = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+  const userId = req.user?.id as string;
+  const result = await technicianService.getTechnicianBookings(userId);
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Fetched all bookings successfully',
+    data: result
+  });
+});
+const editTechnicianBooking = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+  const userId = req.user?.id as string;
+  const payload = req.body;
+  const bookingId = req.params.id as string
+  const result = await technicianService.patchTechnicianBooking(payload, userId, bookingId);
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Your booking status updated successfully',
+    data: result
+  });
+});
 
 export const technicianController = {
   addService,

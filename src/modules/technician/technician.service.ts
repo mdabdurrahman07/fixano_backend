@@ -1,5 +1,10 @@
 import { prisma } from '../../lib/prisma';
-import { IAvailabilityPayload, IServicePayload, IUpdateTechnicianPayload } from './technician.interface';
+import {
+  IAvailabilityPayload,
+  IBookingStatusPayload,
+  IServicePayload,
+  IUpdateTechnicianPayload
+} from './technician.interface';
 
 const createService = async (payload: IServicePayload, userId: string) => {
   const transactionResult = await prisma.$transaction(async (tx) => {
@@ -110,8 +115,81 @@ const putTechnicianAvailability = async (payload: IAvailabilityPayload, userId: 
   });
   return availability;
 };
-const getTechnicianBookings = async () => {};
-const patchTechnicianBooking = async () => {};
+const getTechnicianBookings = async (userId: string) => {
+  const user = await prisma.user.findUnique({
+    where: {
+      id: userId
+    },
+    include: {
+      technician: true
+    }
+  });
+  const technicianId = user?.technician?.id;
+  if (!technicianId) {
+    throw new Error('Technician not found');
+  }
+
+  const bookings = await prisma.booking.findMany({
+    where: {
+      technicianId: technicianId
+    },
+    include: {
+      customer: {
+        omit: {
+          password: true
+        }
+      },
+      service: true,
+      reviews: true
+    }
+  });
+
+  return bookings;
+};
+const patchTechnicianBooking = async (payload: IBookingStatusPayload, userId: string, bookingId: string) => {
+  const user = await prisma.user.findUnique({
+    where: {
+      id: userId
+    },
+    include: {
+      technician: true
+    }
+  });
+  const technicianId = user?.technician?.id;
+  if (!technicianId) {
+    throw new Error('Technician not found');
+  }
+
+  const updateBooking = await prisma.booking.update({
+    where: {
+      id: bookingId
+    },
+    data: {
+      status: payload.status
+    },
+    include: {
+      customer: {
+        select: {
+          id: true,
+          name: true,
+          email: true
+        }
+      },
+      service: {
+        select: {
+          id: true,
+          title: true,
+          price: true,
+          description: true,
+          isActive: true
+        }
+      },
+      reviews: true
+    }
+  });
+
+  return updateBooking;
+};
 
 export const technicianService = {
   createService,

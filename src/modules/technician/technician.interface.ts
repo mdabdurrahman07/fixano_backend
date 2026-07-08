@@ -1,3 +1,5 @@
+import { BookingStatus } from "../../../generated/prisma/enums";
+
 export interface IServicePayload {
     title: string,
     description: string,
@@ -16,4 +18,8 @@ export interface IAvailabilityPayload {
   dayOfWeek: number;
   startTime: string;
   endTime: string;
+}
+
+export interface IBookingStatusPayload {
+  status: Extract<BookingStatus, 'ACCEPTED' | 'DECLINED' | 'COMPLETED'>
 }

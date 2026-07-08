@@ -9,6 +9,6 @@ router.post('/service', auth(Role.TECHNICIAN, Role.ADMIN), technicianController.
 router.put('/profile', auth(Role.TECHNICIAN, Role.ADMIN), technicianController.editTechnicianProfile);
 router.put('/availability', auth(Role.TECHNICIAN, Role.ADMIN), technicianController.editTechnicianAvailability);
 router.get('/bookings', auth(Role.TECHNICIAN, Role.ADMIN), technicianController.fetchTechnicianBookings);
-router.patch('booking/:id', auth(Role.TECHNICIAN, Role.ADMIN), technicianController.editTechnicianBooking);
+router.patch('/bookings/:id', auth(Role.TECHNICIAN, Role.ADMIN), technicianController.editTechnicianBooking);
 
 export const technicianRoute = router;
