@@ -1,0 +1,15 @@
+model payment {
+  id                    String        @id @default(uuid())
+  amount                Decimal       @db.Decimal(10, 2)
+  provider              String        @default("Stripe")
+  status                PaymentStatus @default(PENDING)
+  stripePaymentIntentId String        @unique
+  stripeSessionId       String
+  createdAt             DateTime      @default(now())
+  updatedAt             DateTime      @updatedAt
+  // relations
+  bookingId             String        @unique
+  booking               Booking       @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  customerId            String
+  user                  User          @relation(fields: [customerId], references: [id], onDelete: Cascade)
+}
