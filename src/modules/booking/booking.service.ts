@@ -53,8 +53,44 @@ const createNewBooking = async (payload: ICreateBookingPayload, userId: string) 
   });
   return booking;
 };
-const fetchAllBookings = async () => {};
-const fetchSingleBooking = async () => {};
+const fetchAllBookings = async (userId: string) => {
+  const result = await prisma.booking.findMany({
+    where: {
+      customerId: userId
+    },
+    include: {
+      technician: true,
+      customer: {
+        omit: {
+          password: true
+        }
+      },
+      service: true,
+      reviews: true
+    }
+  });
+
+  return result;
+};
+const fetchSingleBooking = async (bookingId: string, userId: string) => {
+  const result = await prisma.booking.findMany({
+    where: {
+      customerId: userId,
+      id: bookingId
+    },
+    include: {
+      technician: true,
+      customer: {
+        omit: {
+          password: true
+        }
+      },
+      service: true,
+      reviews: true
+    }
+  });
+  return result;
+};
 
 export const bookingService = {
   createNewBooking,
