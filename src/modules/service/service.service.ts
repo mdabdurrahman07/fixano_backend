@@ -90,7 +90,7 @@ const fetchAllTechnicians = async (query: ITechnicianQuery) => {
       yearsExperience: Number(query.yearsExperience)
     });
   }
-  const technicians = await prisma.technician.findFirst({
+  const technicians = await prisma.technician.findMany({
     where: {
       AND: andConditions
     },
