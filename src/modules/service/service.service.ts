@@ -49,7 +49,7 @@ const fetchAllServices = async (query: IServiceQuery) => {
       isActive: query.isActive
     });
   }
-  const services = await prisma.service.findFirst({
+  const services = await prisma.service.findMany({
     where: {
       AND: andConditions
     },

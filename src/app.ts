@@ -8,6 +8,7 @@ import { globalErrorHandler } from './middleware/globalErrorHandler';
 import { adminRoute } from './modules/admin/admin.route';
 import { serviceRoute } from './modules/service/service.route';
 import { technicianRoute } from './modules/technician/technician.router';
+import { bookingRouter } from './modules/booking/booking.router';
 
 const app: Application = express();
 
@@ -45,6 +46,9 @@ app.use('/api/v1/fixano', serviceRoute)
 
 // ! TECHNICIAN 
 app.use('/api/v1/fixano/technician', technicianRoute)
+
+// ! BOOKING
+app.use('/api/v1/fixano/bookings' , bookingRouter)
 
 // ! wrong route
 app.use(notFound);
