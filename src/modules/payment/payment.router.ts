@@ -7,6 +7,6 @@ const router = Router();
 
 router.post('/checkout/:id', auth(Role.CUSTOMER, Role.ADMIN), paymentController.createCheckoutSession);
 router.post('/webhook', paymentController.handleWebhook);
-router.get('/status', auth(Role.CUSTOMER, Role.ADMIN), paymentController.getPaymentStatus);
+router.get('/status/:id', auth(Role.CUSTOMER, Role.ADMIN), paymentController.getPaymentStatus);
 
 export const paymentRoute = router;

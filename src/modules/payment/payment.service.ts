@@ -163,7 +163,38 @@ const handleWebhookService = async (payload: Buffer, signature: string) => {
   }
 };
 
-const handlePaymentStatusService = async () => {};
+const handlePaymentStatusService = async (customerId: string, bookingId: string) => {
+  const payment = await prisma.payment.findUnique({
+    where: {
+      bookingId
+    },
+    include: {
+      booking: {
+        select: {
+          id: true,
+          status: true,
+          totalAmount: true,
+          service: {
+            select: {
+              id: true,
+              title: true,
+              category: {
+                select: { id: true, name: true }
+              }
+            }
+          }
+        }
+      }
+    }
+  });
+  if (!payment) {
+    throw new Error('No payment found for this bookingId or the bookingId is invalid');
+  }
+  if (payment.customerId !== customerId) {
+    throw new Error('You are not authorized to view this payment');
+  }
+  return payment;
+};
 
 export const paymentService = {
   createCheckoutSessionService,
