@@ -6,7 +6,8 @@ import { sendResponse } from '../../util/sendResponse';
 
 const createCheckoutSession = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   const customerId = req.user?.id as string;
-  const result = await paymentService.createCheckoutSessionService(customerId);
+  const bookingId = req.params.id as string
+  const result = await paymentService.createCheckoutSessionService(customerId, bookingId);
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,
