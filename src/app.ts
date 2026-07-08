@@ -13,6 +13,9 @@ import { paymentRoute } from './modules/payment/payment.router';
 
 const app: Application = express();
 
+// webhook
+app.use('/api/v1/fixano/payment/webhook', express.raw({type: "application/json"}))
+
 // express middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
