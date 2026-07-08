@@ -10,6 +10,9 @@ const createNewBooking = async (payload: ICreateBookingPayload, userId: string) 
   if (!user) {
     throw new Error('User not found');
   }
+  if(user.role === "TECHNICIAN"){
+    throw new Error("As a technician you can't book yourself")
+  }
   const technician = await prisma.technician.findUnique({
     where: {
       id: payload.technicianId
