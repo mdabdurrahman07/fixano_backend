@@ -19,3 +19,5 @@ if (config.node_env !== 'production') {
   }
   server();
 }
+
+export default app;
