@@ -10,11 +10,12 @@ import { serviceRoute } from './modules/service/service.route';
 import { technicianRoute } from './modules/technician/technician.router';
 import { bookingRouter } from './modules/booking/booking.router';
 import { paymentRoute } from './modules/payment/payment.router';
+import { reviewRoute } from './modules/review/review.router';
 
 const app: Application = express();
 
 // webhook
-app.use('/api/v1/fixano/payment/webhook', express.raw({type: "application/json"}))
+app.use('/api/v1/fixano/payment/webhook', express.raw({ type: 'application/json' }));
 
 // express middleware
 app.use(express.json());
@@ -43,20 +44,22 @@ app.get('/', (req: Request, res: Response) => {
 app.use('/api/v1/fixano/auth/users', authRouter);
 
 // ! ADMIN
-app.use('/api/v1/fixano/admin', adminRoute)
+app.use('/api/v1/fixano/admin', adminRoute);
 
 // ? SERVICE (PUBLIC)
-app.use('/api/v1/fixano', serviceRoute)
+app.use('/api/v1/fixano', serviceRoute);
 
-// ! TECHNICIAN 
-app.use('/api/v1/fixano/technician', technicianRoute)
+// ! TECHNICIAN
+app.use('/api/v1/fixano/technician', technicianRoute);
 
 // ! BOOKING
-app.use('/api/v1/fixano/bookings' , bookingRouter)
+app.use('/api/v1/fixano/bookings', bookingRouter);
 
-// ! STRIPE PAYMENT 
+// ! STRIPE PAYMENT
+app.use('/api/v1/fixano/payment', paymentRoute);
 
-app.use('/api/v1/fixano/payment', paymentRoute)
+// ! Review
+app.use('/api/v1/fixano/review', reviewRoute);
 
 // ! wrong route
 app.use(notFound);
