@@ -44,9 +44,14 @@ const fetchAllServices = async (query: IServiceQuery) => {
       technicianId: query.technicianId
     });
   }
-  if (query.isActive) {
+  if (query.isActive !== undefined) {
     andConditions.push({
       isActive: query.isActive
+    });
+  }
+  if (query.categoryId) {
+    andConditions.push({
+      categoryId: query.categoryId
     });
   }
   const services = await prisma.service.findMany({
