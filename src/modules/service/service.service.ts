@@ -105,7 +105,13 @@ const fetchAllTechnicians = async (query: ITechnicianQuery) => {
     include: {
       reviews: true,
       availabilities: true,
-      services: true
+      services: true,
+      user: {
+        select:{
+          avatarUrl: true,
+          name: true
+        }
+      }
     }
   });
   return technicians;
