@@ -14,6 +14,16 @@ const getAllServices = catchAsync(async (req: Request, res: Response, next: Next
         data: result
     })
 })
+const getSingleServices = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const serviceId = req.params.id as string
+    const result = await serviceService.fetchSingleService(serviceId)
+    sendResponse(res, {
+        success: true,
+        statusCode: httpStatus.OK,
+        message: "Single services retrieved successfully",
+        data: result
+    })
+})
 
 const getAllTechnicians = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const query = req.query
@@ -49,6 +59,7 @@ const getAllCategories = catchAsync(async (req: Request, res: Response, next: Ne
 
 export const serviceController = {
     getAllServices,
+    getSingleServices,
     getAllTechnicians,
     getSingleTechnician,
     getAllCategories

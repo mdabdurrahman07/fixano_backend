@@ -68,6 +68,21 @@ const fetchAllServices = async (query: IServiceQuery) => {
   });
   return services;
 };
+const fetchSingleService = async (id: string) => {
+  const singleService = await prisma.service.findUnique({
+    where: {
+      id
+    },
+    include:{
+      technician:{
+        select:{
+          availabilities: true
+        }
+      }
+    }
+  });
+  return singleService;
+};
 const fetchAllTechnicians = async (query: ITechnicianQuery) => {
   const sortby = query.sortby ? query.sortby : 'createdAt';
   const sortOrder = query.sortOrder ? query.sortOrder : 'desc';
@@ -107,7 +122,7 @@ const fetchAllTechnicians = async (query: ITechnicianQuery) => {
       availabilities: true,
       services: true,
       user: {
-        select:{
+        select: {
           avatarUrl: true,
           name: true
         }
@@ -125,11 +140,10 @@ const fetchSingleTechnician = async (technicianId: string) => {
       reviews: true,
       availabilities: true,
       services: true,
-      user:{
-        select:{
+      user: {
+        select: {
           name: true,
-          avatarUrl: true,
-          
+          avatarUrl: true
         }
       }
     }
@@ -152,5 +166,6 @@ export const serviceService = {
   fetchAllServices,
   fetchAllTechnicians,
   fetchSingleTechnician,
-  fetchAllCategories
+  fetchAllCategories,
+  fetchSingleService
 };
