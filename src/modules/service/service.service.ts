@@ -124,7 +124,14 @@ const fetchSingleTechnician = async (technicianId: string) => {
     include: {
       reviews: true,
       availabilities: true,
-      services: true
+      services: true,
+      user:{
+        select:{
+          name: true,
+          avatarUrl: true,
+          
+        }
+      }
     }
   });
   if (!technician) {
