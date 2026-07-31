@@ -76,7 +76,7 @@ const fetchAllBookings = async (userId: string) => {
   return result;
 };
 const fetchSingleBooking = async (bookingId: string, userId: string) => {
-  const result = await prisma.booking.findMany({
+  const result = await prisma.booking.findUnique({
     where: {
       customerId: userId,
       id: bookingId
