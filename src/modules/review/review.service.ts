@@ -55,8 +55,37 @@ const deleteReview = async (reviewId: string, customerId: string) => {
     }
   });
 };
+const getAllReview = async (reviewId: string, customerId: string) => {
+  const review = await prisma.review.findUnique({
+    where: { id: reviewId },
+    include:{
+      customer:{
+        select:{
+          name: true
+        },
+        
+      },
+      technician:{
+        select:{
+          user:{
+            select:{
+              name: true
+            }
+          }
+        }
+      }
+    }
+  });
+
+  if (!review) {
+    throw new Error('Review not found');
+  }
+
+  return review;
+};
 
 export const reviewService = {
   createReview,
-  deleteReview
+  deleteReview,
+  getAllReview
 };
