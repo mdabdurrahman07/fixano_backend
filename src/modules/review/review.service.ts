@@ -18,7 +18,7 @@ const createReview = async (
         id: bookingId,
       },
       include: {
-        review: true,
+        reviews: true,
         technician: {
           select: {
             id: true,
@@ -43,7 +43,7 @@ const createReview = async (
       );
     }
 
-    if (booking.review) {
+    if (booking.reviews) {
       throw new Error("You have already reviewed this booking");
     }
 
