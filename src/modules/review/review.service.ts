@@ -90,7 +90,7 @@ const getAllReview = async (customerId: string) => {
   if (!review) {
     throw new Error('Review not found');
   }
-
+  // returning the review
   return review;
 };
 
