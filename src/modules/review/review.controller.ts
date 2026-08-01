@@ -28,9 +28,8 @@ const deleteReview = catchAsync(async (req: Request, res: Response, next: NextFu
   });
 });
 const getAllReview = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-  const reviewId = req.params.id as string;
   const customerId = req.user?.id as string;
-  const result = await reviewService.getAllReview(reviewId, customerId);
+  const result = await reviewService.getAllReview(customerId);
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,

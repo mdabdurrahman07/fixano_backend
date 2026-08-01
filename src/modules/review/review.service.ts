@@ -55,20 +55,30 @@ const deleteReview = async (reviewId: string, customerId: string) => {
     }
   });
 };
-const getAllReview = async (reviewId: string, customerId: string) => {
-  const review = await prisma.review.findUnique({
-    where: { id: reviewId },
-    include:{
-      customer:{
-        select:{
-          name: true
+const getAllReview = async (customerId: string) => {
+  const review = await prisma.review.findMany({
+    where: {
+      OR: [
+        {
+          customerId
         },
-        
+        {
+          technician: {
+            userId: customerId
+          }
+        }
+      ]
+    },
+    include: {
+      customer: {
+        select: {
+          name: true
+        }
       },
-      technician:{
-        select:{
-          user:{
-            select:{
+      technician: {
+        select: {
+          user: {
+            select: {
               name: true
             }
           }
